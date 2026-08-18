@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>90s Vibe Screensaver</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* The moving text */
+        #screensaver-text {
+            position: absolute;
+            font-size: 3rem;
+            font-weight: bold;
+            white-space: nowrap;
+            color: #00ff00; /* Starting classic matrix green */
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+            user-select: none;
+            transition: color 0.1s ease;
+        }
+
+        /* Retro CRT Scanline Effect Overlay */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="crt-overlay"></div>
+    <div id="screensaver-text">HELLO WORLD</div>
+
+    <script>
+        const text = document.getElementById('screensaver-text');
+        
+        // Vibe Parameters
+        let x = Math.random() * (window.innerWidth - 200);
+        let y = Math.random() * (window.innerHeight - 50);
+        let xSpeed = 3;
+        let ySpeed = 3;
+        
+        const colors = [
+            '#ff00ff', // Neon Pink
+            '#00ffff', // Cyan
+            '#ffff00', // Yellow
+            '#ff0000', // Red
+            '#00ff00', // Lime
+            '#ffffff'  // White
+        ];
+
+        function changeColor() {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            text.style.color = randomColor;
+        }
+
+        function animate() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const textWidth = text.offsetWidth;
+            const textHeight = text.offsetHeight;
+
+            // Update position
+            x += xSpeed;
+            y += ySpeed;
+
+            // Bounce off left/right
+            if (x + textWidth >= width || x <= 0) {
+                xSpeed = -xSpeed;
+                changeColor();
+            }
+
+            // Bounce off top/bottom
+            if (y + textHeight >= height || y <= 0) {
+                ySpeed = -ySpeed;
+                changeColor();
+            }
+
+            // Apply style
+            text.style.left = x + 'px';
+            text.style.top = y + 'px';
+
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        changeColor();
+        animate();
+
+        // Handle window resize to keep it in bounds
+        window.addEventListener('resize', () => {
+            x = Math.min(x, window.innerWidth - text.offsetWidth);
+            y = Math.min(y, window.innerHeight - text.offsetHeight);
+        });
+    </script>
+</body>
+</html>
